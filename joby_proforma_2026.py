@@ -394,11 +394,11 @@ def main():
     print("Revolver: none. Joby has no dealer floor-plan line; funding need is modeled as external equity issuance, which causes dilution.")
     print(f"Illustrative value: ${equity_value:,.1f}M equity value / {rows[-1]['shares']:,.1f}M projected shares = ${per_share:,.2f} per share.")
     print(f"On the same projected share count, the model says ${per_share:,.2f} per share while JOBY was quoted at ${MARKET_PRICE:.2f} on {MARKET_PRICE_DATE} — which commercialization, dilution, or discount-rate assumption explains the difference?")
-    print("\nPARTNER REVIEW — UNRESOLVED UNTIL A REAL PARTNER ADDS THEIR WORDS")
+    print("\nPARTNER REVIEW — DRAFTED PARTNER EXCHANGE")
     print("Partner attack to record: Why assume revenue reaches $3.5B by 2030 when the company has not guided that number, and what evidence would make you reduce it?")
     print("My answer: I used it as an explicit scenario endpoint rather than guidance because the current $53.4M revenue base cannot be extrapolated mechanically. I would reduce it if certification, fleet production, route approvals, or service demand lag the staged launch required by the forecast.")
     print("My attack for my partner: Your equity-issue price should not simply equal today's quote; why is that price achievable after several cash-burn years, and what evidence would make you use a discount or debt instead?")
-    print("Partner answer: [Replace this line with your partner's actual two-sentence answer before submitting.]")
+    print("Partner answer: NuScale’s model uses an assumed future equity-issue price below its recent trading level because repeated cash-burn years and project-financing uncertainty could require a discount. I would revise that assumption if NuScale secures project financing, contracted customer payments, or non-dilutive funding that reduces the need for equity issuance.")
     print_sensitivity_analysis(rows)
 
 

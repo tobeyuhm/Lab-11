@@ -34,7 +34,7 @@ The most important input is the **date and commercial scale at which a funded cu
 
 **Proposed range and what it means:**
 
-Use a **scenario range for first material, recurring commercial-project revenue of 2029–2032**, rather than treating one year as a fact. The earlier end is an upside case that requires secured project financing, an executed pre-EPC/EPC path, customer commitments, and timely licensing/construction. The later end is a downside case reflecting financing, permitting, construction, or counterparties’ execution delays. This is a sensitivity range, **not company guidance**; it must remain provisional until the partner cites a project-specific schedule and fee structure.
+Use a **basic classroom-assumption scenario range for first material, recurring commercial-project revenue of 2029–2032**, rather than treating one year as a fact. The earlier end is an upside case that requires secured project financing, an executed pre-EPC/EPC path, customer commitments, and timely licensing/construction. The later end is a downside case reflecting financing, permitting, construction, or counterparties’ execution delays. This is a sensitivity range, **not company guidance or a reported fact**; it must remain provisional until the partner cites a project-specific schedule and fee structure.
 
 **Joby listener’s restatement (in their own words):**
 
@@ -62,4 +62,3 @@ The current filing supports the mechanism but not a precise range. It says RoPow
 - [x] NuScale partner explains the input, causal mechanism, provisional range, and gap.
 - [x] Joby partner restates the NuScale mechanism and asks what supports the range.
 - [x] Both companies’ unresolved evidence needs are written down; no range is presented as a reported fact or company guidance.
-

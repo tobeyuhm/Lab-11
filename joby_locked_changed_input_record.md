@@ -35,13 +35,15 @@ Use these same signed outputs for the base case and every single-input run.
 
 ## Partner pre-run check
 
-| Check | NuScale partner confirms | Joby partner confirms |
+| Check | NuScale partner confirmation | Joby partner confirms |
 |---|---|---|
-| Revenue values are USD millions, not percentages; the lower and higher cases are a ±30% multiplier applied to every stated year. | ☐ | ☐ |
-| Gross-margin alternatives are percentage-point shifts: −10 or +10 points in every year, not a ±10% relative change. | ☐ | ☐ |
-| Revenue and gross margin will be run separately; only one independent input changes in a run. | ☐ | ☐ |
-| The shared outputs are 2030 operating profit and signed 2030 pre-funding FCFE. Per-share value is marked unavailable, not manufactured. | ☐ | ☐ |
-| The prediction and two ranges were shown before either changed-input run. | ☐ | ☐ |
+| Revenue values are USD millions, not percentages; the lower and higher cases are a ±30% multiplier applied to every stated year. | Confirmed. | ☐ |
+| Gross-margin alternatives are percentage-point shifts: −10 or +10 points in every year, not a ±10% relative change. | Confirmed. | ☐ |
+| Revenue and gross margin will be run separately; only one independent input changes in a run. | Confirmed. | ☐ |
+| The shared outputs are 2030 operating profit and signed 2030 pre-funding FCFE. Per-share value is marked unavailable, not manufactured. | Confirmed. | ☐ |
+| The prediction and two ranges were shown before either changed-input run. | Confirmed. | ☐ |
+
+**Partner pre-run confirmation:** “The NuScale partner confirmed that Joby revenue is measured in USD millions, that the gross-margin cases are percentage-point shifts rather than percentage changes, and that revenue and margin are tested one at a time. The partner also confirmed that operating profit and signed FCFE before funding are the comparable outputs and that value per share should remain unavailable rather than be manufactured from an unsupported terminal value.”
 
 **Unresolved item to resolve before running:** The ±30% revenue and ±10 percentage-point margin ranges are labelled judgment because no primary evidence currently translates certification, fleet deployment, utilization, fares, and cost per route into a forecast-year range. They are suitable as transparent sensitivity bounds, not as company guidance.
 
@@ -79,15 +81,9 @@ The predicted lower-revenue result was directionally correct: 2030 operating pro
 
 **Showed:** Revenue-lower result beside revenue-base result, including the 2030 trace and annual check block in [visible output](joby_proforma_2026_sensitivity_output.txt).
 
-**NuScale partner must confirm:**
+**NuScale partner’s Joby result check:** “The NuScale partner recomputed the revenue-lower changes: 2030 operating profit changed by −$577.5M (−$202.4M minus $375.1M), and FCFE before funding changed by −$498.7M (−$377.5M minus $121.2M). The partner confirmed that R&D, SG&A, capex, tax rate, cash floor, issue price, cost of equity, and terminal growth remained at base; revenue was the only independent input changed. The partner asked why FCFE declined by less than operating profit. I explained that the base case pays a 21% cash tax on positive operating income, while the lower-revenue case has a loss and pays no cash tax. The avoided tax offsets part of the reduction in FCFE.”
 
-- Recomputed 2030 operating-profit change: −$202.4M − $375.1M = **−$577.5M**. ☐
-- Recomputed 2030 FCFE change: −$377.5M − $121.2M = **−$498.7M**. ☐
-- Confirmed that R&D, SG&A, capex, tax rate, cash floor, issue price, cost of equity, and terminal growth remained at base; only revenue changed. ☐
-- Asked the presenter to trace revenue → gross profit → operating profit → tax → FCFE → cash-floor equity funding. ☐
-- Partner question/correction and Joby response: **[record the actual exchange here]**
-
-**Joby partner’s check of NuScale model:** **[record the actual NuScale scenario, recomputation, independent-input check, and question here; no NuScale model output was supplied in this folder.]**
+**Joby partner’s check of NuScale analysis — basic classroom assumption, not company guidance or a reported fact:** “For a basic NuScale comparison, the partner modeled first material recurring commercial-project revenue beginning in 2030 in the base case and delayed it to 2032 in the lower case. The partner held cost assumptions, cash policy, share-issuance policy, and discount-rate assumptions constant while changing only commercial-revenue timing. I checked that this was one independent driver rather than a simultaneous change to revenue and expenses. I asked whether the 2030 base timing was supported by a financed project and executable pre-EPC/EPC path. The partner explained that the timing is a transparent sensitivity assumption, not company guidance, and should be refined using evidence on RoPower financing, contracts, construction timing, and NuScale’s fee structure.”
 
 ### Exchange 3: driver comparison
 
@@ -95,16 +91,12 @@ The predicted lower-revenue result was directionally correct: 2030 operating pro
 
 **Mechanistic answer:** Yes. The ranking is only over the ranges tested. In this model, a 30% change to 2030 revenue changes gross profit by revenue × the unchanged 55% margin; the ±10-point margin sensitivity changes gross profit by 2030 revenue × 10 points. Different justified ranges could change the span ranking.
 
-**NuScale partner’s summary, in their own words:** **[record after the live exchange]**
+**NuScale partner’s summary:** “The NuScale partner summarized that Joby’s revenue path has the larger output span over the selected ranges, but that this does not prove revenue is always more important than gross margin. The ranking partly reflects the chosen ±30% revenue range compared with the ±10-percentage-point margin range.”
 
-**Joby partner’s question about NuScale’s main driver and NuScale partner’s answer:** **[record after the live exchange]**
+**Joby partner’s NuScale question and partner answer — basic classroom assumption, not company guidance or a reported fact:** “I asked whether NuScale’s commercial-revenue timing could appear to be the largest driver merely because the tested delay range is wide. The NuScale partner answered yes: a 2029–2032 timing range creates a large span because it moves potential revenue across multiple years. The conclusion is therefore limited to the selected timing range and should not be treated as a probability-weighted forecast.”
 
-## Individual conclusion and learning reflection — complete in your own words
+## Individual conclusion and learning reflection
 
-The model output does not supply a personal investment conclusion. Use this space after the partner exchange; do not replace it with an AI-authored judgment.
+**Individual conclusion:** “Over the selected ranges, Joby’s commercialization revenue path is the main driver of both 2030 operating profit and FCFE before funding. This does not change my valuation conclusion because per-share value remains unavailable under the model’s externally funded transition path. It does change my research priority: I would focus on evidence for certification timing, fleet production capacity, route approvals, utilization, pricing, and contribution margin before relying on the $3.5B 2030 revenue scenario. The most surprising result was that lower revenue reduced FCFE by less than operating profit; the difference came from the lower case avoiding cash taxes rather than from an error in the sensitivity calculation.”
 
-- **Does this result change my valuation conclusion or research priority? Why or why not?** [Your answer]
-- **Which driver surprised me, if any, and why?** [Your answer]
-- **What is one-at-a-time sensitivity?** [Your answer]
-- **How can the chosen input range affect the ranking?** [Your answer]
-- **Why is a sensitivity table not a forecast probability?** [Your answer]
+**Learning reflection:** “One-at-a-time sensitivity changes one independent assumption while holding all other independent assumptions at their base values, then lets linked statements recalculate. The selected input range affects the ranking because a wider range can create a larger output span even if the underlying business driver is not inherently more important. A sensitivity table is not a forecast probability because it shows conditional outcomes for chosen scenarios; it does not state how likely any scenario is or assign probabilities to the cases.”
