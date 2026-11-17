@@ -58,9 +58,11 @@ model output.
 | Field | Entry |
 |---|---|
 | Prediction prepared by | [TO COMPLETE: author name]. Drafted with AI assistance (Claude, 2026-11-17) from the model code; the author must check it before committing. |
-| Prediction commit hash | [TO COMPLETE: full hash from `git log -1 --format=%H` after committing this file] |
-| Prediction commit link | [TO COMPLETE: https://github.com/tobeyuhm/Lab-11/commit/HASH] |
-| Commit date and time | [TO COMPLETE: from `git log -1 --format=%ci`] |
+| Prediction commit hash | `55dcb5c544f36bc1dd1014087c461f3397f66076` |
+| Prediction commit link | https://github.com/tobeyuhm/Lab-11/commit/55dcb5c544f36bc1dd1014087c461f3397f66076 |
+| Commit date and time | 2026-11-17 14:09:53 −0500; pushed to `origin/lab20-evidence-package` before the changed-input run |
+
+*Part A above this table is unchanged since that commit. Compare with `git diff 55dcb5c -- docs/changed-input-record.md`.*
 
 ---
 
@@ -83,31 +85,45 @@ Source: [../outputs/baseline/decision.md](../outputs/baseline/decision.md), from
 
 ## Part C — Changed-input output
 
-*Fill in only after the Part A commit exists.*
+Run on 2026-11-17, after the Part A commit was pushed.
 
-Source: [TO COMPLETE: link to `../outputs/revenue_pct_85/decision.md` once it is generated and committed]
+Source: [../outputs/revenue_pct_85/decision.md](../outputs/revenue_pct_85/decision.md)
+(full report: [../outputs/revenue_pct_85/full_report.txt](../outputs/revenue_pct_85/full_report.txt)), from
+`py joby_proforma_2026.py --revenue-pct 85`.
 
 | Decision number | Value |
 |---|---:|
-| 2030 operating profit | [TO COMPLETE] |
-| 2030 FCFE before funding | [TO COMPLETE] |
-| Cumulative 2026-30 equity raised | [TO COMPLETE] |
-| 2030 shares outstanding | [TO COMPLETE] |
-| New shares 2026-30, % of FY2025 shares (915.1M) | [TO COMPLETE] |
+| 2030 operating profit | $86.3M |
+| 2030 FCFE before funding | $-106.9M |
+| Cumulative 2026-30 equity raised | $2,593.7M |
+| 2030 shares outstanding | 1,332.1M |
+| New shares 2026-30, % of FY2025 shares (915.1M) | 45.6% |
 
-**Mandate verdict:** [TO COMPLETE]
+**Mandate verdict:** REJECT (FCFE condition FAIL; dilution condition FAIL)
 
-**Decision line (output):** [TO COMPLETE]
+**Decision line:** Reject a JOBY pilot allocation, because the model fails the mandate: 2030 FCFE before funding above $0.0M (actual $-106.9M); Cumulative 2026-30 new shares at or below 25.0% of FY2025 shares (actual 45.6%).
 
-**Reversal condition (output):** [TO COMPLETE]
+**Reversal condition:** This decision reverses to a pilot of at most 1% if a rerun shows 2030 FCFE before funding above $0.0M and cumulative new shares at or below 25.0% of FY2025 shares; with every other input at base, the model first passes both at --revenue-pct 162.1.
 
 ---
 
 ## Part D — What happened
 
+*Drafted with AI assistance (Claude, 2026-11-17) by comparing the Part A prediction with the
+Part C output. The author should review it and rewrite it in their own words if required.*
+
+| Decision number | Baseline | Predicted | Actual | Direction matched? |
+|---|---:|---:|---:|---|
+| 2030 operating profit | $375.1M | ≈ $86.4M, down | $86.3M | Yes |
+| 2030 FCFE before funding | $121.2M | ≈ −$106.9M, down, turning negative | $-106.9M | Yes |
+| Cumulative 2026-30 equity raised | $2,275.8M | ≈ $2,593.6M, up | $2,593.7M | Yes |
+| 2030 shares outstanding | 1,281.0M | ≈ 1,332.1M, up | 1,332.1M | Yes |
+| New shares, % of FY2025 shares | 40.0% | ≈ 45.6%, up | 45.6% | Yes |
+
 | Question | Entry |
 |---|---|
-| What happened to each decision number | [TO COMPLETE] |
-| Did the decision change? | [TO COMPLETE] |
-| Did each number move in the predicted direction? | [TO COMPLETE] |
-| Why the outcome did or did not match the prediction | [TO COMPLETE] |
+| What happened | Cutting the revenue path by 15% lowered 2030 operating profit by $288.8M and turned 2030 FCFE before funding negative. Equity raised rose by $317.9M, and new shares rose from 40.0% to 45.6% of FY2025 shares. Yearly raises were $0.0M / $762.8M / $974.0M / $750.0M / $106.9M for 2026–30. Every annual balance-sheet and cash-floor check passed. |
+| Did the decision change? | **No.** The verdict stayed REJECT. The reason widened: the FCFE condition went from PASS to FAIL, and the dilution condition stayed FAIL. The reversal threshold stayed at `--revenue-pct 162.1`. |
+| Did the outcome match the prediction? | Yes, in direction for all five numbers and for the verdict, the condition flip, and the threshold. Sizes were within $0.1M or 0.1 points. |
+| Why it matched | Revenue passes through the model by fixed rules: gross profit = revenue × an unchanged margin; depreciation does not depend on revenue; 21% tax applies only to positive operating income; and any cash shortfall below $300M becomes new equity at $6.22. Because 2030 operating profit stayed positive, the hand calculation of the tax effect held. The $0.1M differences come from starting the hand calculation from rounded baseline figures ($375.1M rather than the unrounded value). |
+| What this means for the decision | The rejection survives a 15% lower revenue path and becomes stronger, since it now fails both conditions. It does not test whether the rejection survives a *higher* path or a change in the equity issue price, which would move the dilution condition directly. |
