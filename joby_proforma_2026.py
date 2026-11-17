@@ -2,10 +2,20 @@
 
 This is a separate, local submission file.  It does not import the ABG engine
 because an auto retailer's inventory and floor-plan financing are not relevant
-to a pre-commercial eVTOL developer.  Run with: py joby_proforma_2026.py
+to a pre-commercial eVTOL developer.
+
+Run with:  py joby_proforma_2026.py --revenue-pct 100
+--revenue-pct is the one documented control: the 2026-30 revenue path as a
+percent of the base path (100 = base).  The decision result is written to
+outputs/<case>/decision.md and the full report to outputs/<case>/full_report.txt.
 """
 
+import argparse
+import contextlib
+import io
+import sys
 from math import pow
+from pathlib import Path
 
 
 YEARS = (2026, 2027, 2028, 2029, 2030)
@@ -173,7 +183,7 @@ def value_per_share(rows, inputs=None):
     terminal_value = terminal_fcfe * (1 + inputs["terminal_growth"]) / (
         inputs["cost_of_equity"] - inputs["terminal_growth"]
     )
-    pv += terminal_value / pow(1 + COST_OF_EQUITY, len(rows))
+    pv += terminal_value / pow(1 + inputs["cost_of_equity"], len(rows))
     return pv / rows[-1]["shares"], pv
 
 
@@ -379,9 +389,191 @@ def print_sensitivity_analysis(base_rows_first):
     print_trace(restored_rows, restored_inputs)
 
 
-def main():
-    base_inputs_first = build_inputs()
-    rows = forecast(base_inputs_first)
+# Investment-committee mandate (Project 2, Lab 20).  Thresholds were set by the
+# author on 2026-11-17 before the mandate was run against any model output.
+MANDATE = {
+    "pilot_cap_pct": 1.0,          # largest portfolio weight a JOBY pilot may take
+    "min_2030_fcfe": 0.0,          # USD millions; 2030 FCFE before funding must exceed this
+    "max_new_share_pct": 25.0,     # cumulative 2026-30 new shares, % of FY2025 shares
+}
+MODEL_AS_OF = ("FY2025 balance sheet at December 31, 2025 "
+               "(Joby 2025 10-K, filed February 26, 2026)")
+OUTPUT_DIR = Path(__file__).resolve().parent / "outputs"
+
+
+def revenue_inputs(revenue_pct):
+    """Return a fresh base input set with only the revenue path scaled."""
+    inputs = build_inputs()
+    if revenue_pct != 100.0:
+        inputs["revenue"] = tuple(value * revenue_pct / 100.0 for value in inputs["revenue"])
+    return inputs
+
+
+def decision_numbers(rows, inputs):
+    """The numbers the mandate is judged on (USD millions except shares and %)."""
+    final = final_year_outputs(rows, inputs)
+    new_shares = rows[-1]["shares"] - OPENING["shares"]
+    return {
+        "operating_profit_2030": final["operating_profit"],
+        "fcfe_2030": final["fcfe"],
+        "equity_raised": sum(row["equity_raise"] for row in rows),
+        "shares_2030": rows[-1]["shares"],
+        "new_share_pct": new_shares / OPENING["shares"] * 100.0,
+    }
+
+
+def mandate_check(numbers):
+    """Return (passes, list of condition results) for the committee mandate."""
+    conditions = [
+        ("2030 FCFE before funding above "
+         f"${MANDATE['min_2030_fcfe']:,.1f}M",
+         f"${numbers['fcfe_2030']:,.1f}M",
+         numbers["fcfe_2030"] > MANDATE["min_2030_fcfe"]),
+        ("Cumulative 2026-30 new shares at or below "
+         f"{MANDATE['max_new_share_pct']:.1f}% of FY2025 shares",
+         f"{numbers['new_share_pct']:.1f}%",
+         numbers["new_share_pct"] <= MANDATE["max_new_share_pct"]),
+    ]
+    return all(passed for _, _, passed in conditions), conditions
+
+
+def passes_at(revenue_pct):
+    inputs = revenue_inputs(revenue_pct)
+    return mandate_check(decision_numbers(forecast(inputs), inputs))[0]
+
+
+def reversal_revenue_pct(currently_passes):
+    """Smallest --revenue-pct (0.1 steps, 1-1000) at which the mandate passes.
+
+    Higher revenue raises FCFE and lowers equity issuance, so the pass region is
+    every revenue percent at or above one threshold.  Returns None if not reached.
+    """
+    low, high = 1.0, 1000.0
+    if not passes_at(high):
+        return None
+    if passes_at(low):
+        return low
+    while high - low > 0.1:
+        middle = (low + high) / 2
+        if passes_at(middle):
+            high = middle
+        else:
+            low = middle
+    return round(-(-high // 0.1) * 0.1, 1)  # round up to the next 0.1
+
+
+def format_decision(revenue_pct, inputs, rows):
+    numbers = decision_numbers(rows, inputs)
+    passes, conditions = mandate_check(numbers)
+    threshold = reversal_revenue_pct(passes)
+    verdict = "PILOT" if passes else "REJECT"
+    cap = MANDATE["pilot_cap_pct"]
+    if passes:
+        decision_line = (f"Pilot a JOBY position capped at {cap:.0f}% of the portfolio, because every "
+                         "mandate condition passes at this revenue path.")
+        reverse = (f"This decision reverses to reject if a rerun shows 2030 FCFE before funding at or below "
+                   f"${MANDATE['min_2030_fcfe']:,.1f}M or new shares above {MANDATE['max_new_share_pct']:.1f}% "
+                   f"of FY2025 shares; with every other input at base, that happens below "
+                   f"--revenue-pct {threshold:.1f}.")
+    else:
+        failed = "; ".join(f"{name} (actual {actual})" for name, actual, ok in conditions if not ok)
+        decision_line = (f"Reject a JOBY pilot allocation, because the model fails the mandate: {failed}.")
+        where = (f"with every other input at base, the model first passes both at --revenue-pct {threshold:.1f}"
+                 if threshold is not None else
+                 "with every other input at base, no revenue path up to 1000% of base passes both")
+        reverse = (f"This decision reverses to a pilot of at most {cap:.0f}% if a rerun shows 2030 FCFE before "
+                   f"funding above ${MANDATE['min_2030_fcfe']:,.1f}M and cumulative new shares at or below "
+                   f"{MANDATE['max_new_share_pct']:.1f}% of FY2025 shares; {where}.")
+    case = "Baseline" if revenue_pct == 100.0 else "Changed input"
+    lines = [
+        f"# JOBY Decision Result — {case} (--revenue-pct {revenue_pct:g})",
+        "",
+        f"- **Command:** `py joby_proforma_2026.py --revenue-pct {revenue_pct:g}`",
+        f"- **Model as-of date:** {MODEL_AS_OF}",
+        f"- **Market quote shown for comparison only (not used in the decision):** ${MARKET_PRICE:.2f} on {MARKET_PRICE_DATE}",
+        "- **Units:** USD millions except shares (millions) and percentages",
+        "",
+        "## Input",
+        "",
+        f"- **--revenue-pct:** {revenue_pct:g}% of the base 2026-30 revenue path",
+        f"- **2026-30 revenue path:** {format_path(inputs['revenue'], suffix='M')}",
+        "",
+        "## Decision numbers",
+        "",
+        "| Decision number | Value |",
+        "|---|---:|",
+        f"| 2030 operating profit | ${numbers['operating_profit_2030']:,.1f}M |",
+        f"| 2030 FCFE before funding | ${numbers['fcfe_2030']:,.1f}M |",
+        f"| Cumulative 2026-30 equity raised | ${numbers['equity_raised']:,.1f}M |",
+        f"| 2030 shares outstanding | {numbers['shares_2030']:,.1f}M |",
+        f"| New shares 2026-30, % of FY2025 shares ({OPENING['shares']:,.1f}M) | {numbers['new_share_pct']:.1f}% |",
+        "",
+        "## Mandate check",
+        "",
+        "| Condition | Actual | Result |",
+        "|---|---:|---|",
+    ]
+    lines += [f"| {name} | {actual} | {'PASS' if ok else 'FAIL'} |" for name, actual, ok in conditions]
+    lines += [
+        "",
+        f"**Mandate verdict:** {verdict}",
+        "",
+        "## Assumptions held at base",
+        "",
+        f"- Gross margin 2026-30: {format_path(tuple(m * 100 for m in inputs['gross_margin']), decimals=0, suffix='%')}",
+        f"- R&D 2026-30: {format_path(inputs['r_and_d'], decimals=0, suffix='M')}",
+        f"- SG&A 2026-30: {format_path(inputs['sga'], decimals=0, suffix='M')}",
+        f"- Capex 2026-30: {format_path(inputs['capex'], decimals=0, suffix='M')}",
+        "- Depreciation: 22.86% of opening PP&E each year",
+        f"- Cash tax: {inputs['tax_rate'] * 100:.0f}% of positive operating income only",
+        f"- Cash floor ${inputs['minimum_cash']:,.0f}M, funded by new equity at ${inputs['equity_issue_price']:.2f}/share",
+        "- Per-share value is not used: the terminal-value figure is illustrative only (see full report)",
+        "",
+        "## Decision",
+        "",
+        f"**Decision line:** {decision_line}",
+        "",
+        f"**Reversal condition:** {reverse}",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def full_report(inputs, rows, base_rows):
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        print_report(inputs, rows, base_rows)
+    return buffer.getvalue()
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Joby pro forma and committee mandate check.")
+    parser.add_argument(
+        "--revenue-pct", type=float, default=100.0,
+        help="2026-30 revenue path as a percent of the base path (100 = base; 85 = 15%% lower).",
+    )
+    args = parser.parse_args(argv)
+    if args.revenue_pct <= 0:
+        parser.error("--revenue-pct must be greater than 0")
+    inputs = revenue_inputs(args.revenue_pct)
+    rows = forecast(inputs)
+    base_rows = forecast(build_inputs())
+
+    case_dir = OUTPUT_DIR / ("baseline" if args.revenue_pct == 100.0 else f"revenue_pct_{args.revenue_pct:g}")
+    case_dir.mkdir(parents=True, exist_ok=True)
+    decision = format_decision(args.revenue_pct, inputs, rows)
+    (case_dir / "decision.md").write_text(decision, encoding="utf-8", newline="\n")
+    (case_dir / "full_report.txt").write_text(full_report(inputs, rows, base_rows),
+                                              encoding="utf-8", newline="\n")
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    print(decision)
+    relative = case_dir.relative_to(OUTPUT_DIR.parent).as_posix()
+    print(f"Saved: {relative}/decision.md and {relative}/full_report.txt")
+
+
+def print_report(base_inputs_first, rows, base_rows):
+    """The original Lab 10/11 report, for the run's inputs (sensitivity starts from base)."""
     print_history()
     print_ratios()
     print(f"\n{ASSUMPTION_TABLE}")
@@ -399,7 +591,7 @@ def main():
     print("My answer: I used it as an explicit scenario endpoint rather than guidance because the current $53.4M revenue base cannot be extrapolated mechanically. I would reduce it if certification, fleet production, route approvals, or service demand lag the staged launch required by the forecast.")
     print("My attack for my partner: Your equity-issue price should not simply equal today's quote; why is that price achievable after several cash-burn years, and what evidence would make you use a discount or debt instead?")
     print("Partner answer: NuScale’s model uses an assumed future equity-issue price below its recent trading level because repeated cash-burn years and project-financing uncertainty could require a discount. I would revise that assumption if NuScale secures project financing, contracted customer payments, or non-dilutive funding that reduces the need for equity issuance.")
-    print_sensitivity_analysis(rows)
+    print_sensitivity_analysis(base_rows)
 
 
 if __name__ == "__main__":
