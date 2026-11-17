@@ -69,14 +69,6 @@ Otherwise the verdict is **reject**. The thresholds are in `MANDATE` in
 | [joby_proforma_2026_visible_output.txt](joby_proforma_2026_visible_output.txt), [joby_proforma_2026_sensitivity_output.txt](joby_proforma_2026_sensitivity_output.txt) | Lab 11 report outputs, regenerated in UTF-8 from the current code |
 | [joby_nuscale_partner_input_review.md](joby_nuscale_partner_input_review.md), [lab12_live_review.md](lab12_live_review.md) | Earlier partner and live-review records |
 
-## Videos and transcripts
-
-| Video | Assigned question | Link | Transcript |
-|---|---|---|---|
-| Video 1 | [TO COMPLETE: assigned question] | [TO COMPLETE: video URL] | [TO COMPLETE: transcript file path or URL] |
-| Video 2 | [TO COMPLETE: assigned question] | [TO COMPLETE: video URL] | [TO COMPLETE: transcript file path or URL] |
-| Video 3 | [TO COMPLETE: assigned question] | [TO COMPLETE: video URL] | [TO COMPLETE: transcript file path or URL] |
-
 ## Partner instructions (cold run)
 
 1. Clone this repository into **your own new, empty folder** — not the author's folder.

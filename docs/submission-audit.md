@@ -20,12 +20,10 @@ step. This audit does not claim any grade.
 | 5c | Locked Changed-Input Record (prediction) | Complete except author name | [changed-input-record.md](changed-input-record.md), Part A; locked in commit `55dcb5c`, pushed before the run | Author name in the Lock table |
 | 5d | Changed-input stress run | Complete | [outputs/revenue_pct_85/decision.md](../outputs/revenue_pct_85/decision.md); Parts C–D of the record. Verdict stayed REJECT; FCFE condition flipped to FAIL, as predicted | Author review of the AI-drafted Part D |
 | 5e | Validation-and-AI-Use record | Needs Human Evidence | AI use so far: Claude drafted the CLI, mandate check, docs, and the Part A prediction on 2026-11-17 | Author's AI-use disclosure in the course's required format |
-| 6 | Videos 1–3 with working links, each answering its question | Needs Human Evidence | [README → Videos](../README.md#videos-and-transcripts) | Recordings, links, assigned questions |
-| 7 | Transcripts | Needs Human Evidence | Same table | Transcript files or links |
 | 8 | Partner cold run (command, first failure, time, location) | Needs Human Evidence | [partner-cold-run.md](partner-cold-run.md) | Partner completes Run 1; fix and rerun if needed |
 | 9 | Decision line with an allowed verb, plus a reversal condition | Complete | Decision section of [decision.md](../outputs/baseline/decision.md) and [memo](decision-memo.md) | — |
 | 10 | Reflection (what the cold run found; what won't change) | Blocked | [partner-cold-run.md → Author reflection](partner-cold-run.md#author-reflection-author-fills-in-after-the-cold-run) | Comes after the cold run |
-| 11 | GitHub checkout: working links to Markdown, code, outputs, videos, transcripts | Needs Human Evidence | All repository links are relative | Push; click-test on GitHub; add video and transcript links |
+| 11 | GitHub checkout: working links to Markdown, code, outputs | Needs Human Evidence | All repository links are relative; pushed to `master` | Click-test the links on GitHub |
 
 ## Known risks
 
