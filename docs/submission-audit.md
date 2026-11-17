@@ -1,6 +1,6 @@
 # Lab 20 Submission Audit — JOBY Project 2
 
-**Audit date:** 2026-11-17 · **Branch audited:** `lab20-evidence-package` (not yet merged to `master`)
+**Audit date:** 2026-11-17 · **Branch audited:** `master` (merged from `lab20-evidence-package` at `df5f07f`)
 
 **Standard:** "A committee member who has never met me should be able to reach my decision
 from the repository, and the decision should survive one changed input."
@@ -12,7 +12,7 @@ step. This audit does not claim any grade.
 | # | Requirement | Status | Evidence / location | What is still needed |
 |---|---|---|---|---|
 | 1 | Tool: change one documented input, read the mandate verdict | Complete | `--revenue-pct` in [README](../README.md#the-one-documented-input); verdict in [decision.md](../outputs/baseline/decision.md) | — |
-| 2 | README gives one exact command from a fresh clone | Complete, pending a cold run | [README → Run it](../README.md#run-it): `py joby_proforma_2026.py --revenue-pct 100` | Merge to `master` (the default clone) and confirm with the partner cold run |
+| 2 | README gives one exact command from a fresh clone | Complete, pending a cold run | [README → Run it](../README.md#run-it): `py joby_proforma_2026.py --revenue-pct 100` | Confirm with the partner cold run |
 | 3 | Decision numbers readable on GitHub without running code | Complete once pushed | [outputs/baseline/decision.md](../outputs/baseline/decision.md) | Commit and push |
 | 4 | Decision memo matches visible output exactly | Complete except author fields | [decision-memo.md](decision-memo.md) | Author name, memo date, optional limitations |
 | 5a | Baseline output | Complete | [outputs/baseline/](../outputs/baseline/) | — |
