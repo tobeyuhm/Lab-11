@@ -25,6 +25,20 @@ step. This audit does not claim any grade.
 | 10 | Reflection (what the cold run found; what won't change) | Blocked | [partner-cold-run.md → Author reflection](partner-cold-run.md#author-reflection-author-fills-in-after-the-cold-run) | Comes after the cold run |
 | 11 | GitHub checkout: working links to Markdown, code, outputs | Needs Human Evidence | All repository links are relative; pushed to `master` | Click-test the links on GitHub |
 
+## Author pre-check before the partner cold run (not the partner cold run)
+
+On 2026-11-17, Claude (an AI assistant working for the author) cloned the repository from GitHub into an
+empty folder on the author's machine (Windows, Python 3.14.7) and ran the README command
+`py joby_proforma_2026.py --revenue-pct 100`.
+
+- **Found:** the run worked (exit 0, about 1 second, same numbers). However, `git status` then showed
+  `outputs/baseline/decision.md` and `full_report.txt` as modified. Only the line endings differed:
+  Windows Git checked the files out as CRLF, and the script writes LF.
+- **Fix:** commit `99f1d42` added `.gitattributes` (`outputs/** text eol=lf`).
+- **Recheck:** a second fresh clone at `99f1d42` ran cleanly, and `git status` showed no changes.
+
+This pre-check does not replace the partner cold run in [partner-cold-run.md](partner-cold-run.md).
+
 ## Known risks
 
 - **Project fit:** the course defines Project 2 as deciding whether to adopt, allocate to,
